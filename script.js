@@ -64,7 +64,7 @@ const operate = function (firstNumber, operator, secondNumber) {
       break;
   }
 };
-
+let calculateBuffer = [];
 let displayValue = [];
 let inputArray = [];
 let currentInputForCalculation = "";
@@ -94,19 +94,74 @@ operatorButtons.forEach((button) => {
     console.log(inputArray);
     currentInputForCalculation = "";
     display.textContent = displayValue.join("");
-    // TODO After pressing operator button we should remember currentInput, clear it and start writing new input
   });
 });
 const evaluateButton = document.querySelector("#evaluate");
 evaluateButton.addEventListener("click", () => {
   inputArray.push(+currentInputForCalculation);
   currentInputForCalculation = "wrong";
+  console.log(`Before while loop ${calculateBuffer}`);
+  console.log();
+  while (
+    inputArray.indexOf("multiply") !== -1 ||
+    inputArray.indexOf("divide") !== -1
+  ) {
+    let priorityOpIndex = inputArray.indexOf("multiply" || "divide");
+    console.log(priorityOpIndex);
+    calculateBuffer.push(
+      inputArray[priorityOpIndex - 1],
+      inputArray[priorityOpIndex],
+      inputArray[priorityOpIndex + 1]
+    );
+    result = operate(
+      calculateBuffer.shift(),
+      calculateBuffer.shift(),
+      calculateBuffer.shift()
+    );
+    inputArray.splice(priorityOpIndex - 1, 3, result); //TODO find out why it isnt working as intented
 
+    console.log(`buffer is: ${calculateBuffer}`);
+  }
+  console.log(`after while loop ${calculateBuffer}`);
   console.log(`before operate: ${inputArray}`);
-  result = operate(inputArray.shift(), inputArray.shift(), inputArray.shift());
+  console.log(calculateBuffer);
+  result = operate(
+    calculateBuffer.shift(),
+    calculateBuffer.shift(),
+    calculateBuffer.shift()
+  );
   inputArray[0] = result;
   console.log(`after operate: ${inputArray}`);
   displayValue = [result];
   display.textContent = result;
   console.log(displayValue);
 });
+// TODO add Keybindings
+// const findPriorityOperator = function () {
+//   inputArray.forEach((element) => {
+//     if (element === "multiply" || element === "divide") {
+//       let priorityOpIndex = array.indexOf(element);
+//       priorityOp.push(
+//         array[priorityOpIndex - 1],
+//         array[priorityOpIndex],
+//         array[priorityOpIndex + 1]
+//       );
+//     }
+//   });
+// };
+
+// switch (element) {
+//   case "multiply":
+//   case "divide":
+//     let priorityOpIndex = inputArray.indexOf(element);
+//     calculateBuffer.push(
+//       array[priorityOpIndex - 1],
+//       array[priorityOpIndex],
+//       array[priorityOpIndex + 1]
+//     );
+//     break;
+//   case "add":
+//   case "subtract":
+
+//   default:
+//     break;
