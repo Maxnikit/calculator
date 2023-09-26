@@ -64,6 +64,9 @@ const operate = function (firstNumber, operator, secondNumber) {
       break;
   }
 };
+let errorFlag = false;
+let currentOperator = "";
+let result = 0;
 let priorityOpIndex = 0;
 let calculateBuffer = [];
 let displayValue = [];
@@ -76,13 +79,15 @@ const numberButtons = document.querySelectorAll(".numberButton");
 numberButtons.forEach((button) => {
   button.addEventListener("click", () => {
     currentInputForCalculation += button.id;
+
     currentInputForDisplay = button.id;
     displayValue.push(currentInputForDisplay);
+    result = displayValue.join("");
+
     display.textContent = displayValue.join("");
   });
 });
-let currentOperator = "";
-let result = 0;
+
 const operatorButtons = document.querySelectorAll(".operatorButton");
 operatorButtons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -96,12 +101,11 @@ operatorButtons.forEach((button) => {
     display.textContent = displayValue.join("");
   });
 });
+//TODO Find out about currentInputForCalculation=wrong and why it causes NaN to appear after pressing = multiple times
 const evaluateButton = document.querySelector("#evaluate");
 evaluateButton.addEventListener("click", () => {
   inputArray.push(+currentInputForCalculation);
   currentInputForCalculation = "wrong";
-  console.log(`Before while loop ${calculateBuffer}`);
-  console.log(inputArray);
   while (
     inputArray.indexOf("multiply") !== -1 ||
     inputArray.indexOf("divide") !== -1
@@ -110,6 +114,10 @@ evaluateButton.addEventListener("click", () => {
       priorityOpIndex = inputArray.indexOf("multiply");
     } else if (inputArray.indexOf("divide") !== -1) {
       priorityOpIndex = inputArray.indexOf("divide");
+      if (inputArray[priorityOpIndex + 1] === 0) {
+        errorFlag = true;
+        inputArray[priorityOpIndex + 1] = 1;
+      }
     }
     console.log(priorityOpIndex);
     calculateBuffer.push(
@@ -122,7 +130,7 @@ evaluateButton.addEventListener("click", () => {
       calculateBuffer.shift(),
       calculateBuffer.shift()
     );
-    inputArray.splice(priorityOpIndex - 1, 3, result); //TODO find out why it isnt working as intented
+    inputArray.splice(priorityOpIndex - 1, 3, result);
 
     console.log(`buffer is: ${calculateBuffer}`);
   }
@@ -152,34 +160,25 @@ evaluateButton.addEventListener("click", () => {
   }
   console.log(inputArray);
   displayValue = [result];
-  display.textContent = result;
+  if (!errorFlag) {
+    display.textContent = result;
+  } else if (errorFlag) {
+    display.textContent = "Trying to divide by 0, huh?";
+    errorFlag = false;
+  }
 });
 // TODO add Keybindings
-// const findPriorityOperator = function () {
-//   inputArray.forEach((element) => {
-//     if (element === "multiply" || element === "divide") {
-//       let priorityOpIndex = array.indexOf(element);
-//       priorityOp.push(
-//         array[priorityOpIndex - 1],
-//         array[priorityOpIndex],
-//         array[priorityOpIndex + 1]
-//       );
-//     }
-//   });
-// };
-
-// switch (element) {
-//   case "multiply":
-//   case "divide":
-//     let priorityOpIndex = inputArray.indexOf(element);
-//     calculateBuffer.push(
-//       array[priorityOpIndex - 1],
-//       array[priorityOpIndex],
-//       array[priorityOpIndex + 1]
-//     );
-//     break;
-//   case "add":
-//   case "subtract":
-
-//   default:
-//     break;
+const clearButton = document.querySelector("#clear");
+clearButton.addEventListener("click", () => {
+  errorFlag = false;
+  currentOperator = "";
+  result = 0;
+  priorityOpIndex = 0;
+  calculateBuffer = [];
+  displayValue = [];
+  inputArray = [];
+  currentInputForCalculation = "";
+  currentInputForDisplay = "";
+  display.textContent = "DISPLAY";
+});
+//TODO Disable ability to write several zeros in a row
