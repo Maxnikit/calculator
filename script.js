@@ -1,4 +1,6 @@
 const add = function (a, b) {
+  console.log(a);
+  console.log(b);
   return a + b;
 };
 
@@ -48,15 +50,63 @@ const factorial = function (a) {
     return result;
   }
 };
-let currentInput = "";
+const operate = function (firstNumber, operator, secondNumber) {
+  switch (operator) {
+    case "add":
+      console.log("function add");
+      return add(firstNumber, secondNumber);
+    case "subtract":
+      return subtract(firstNumber, secondNumber);
+    case "multiply":
+      return multiply(firstNumber, secondNumber);
+    case "divide":
+      return divide(firstNumber, secondNumber);
+      break;
+  }
+};
+
+let displayValue = [];
+let inputArray = [];
+let currentInputForCalculation = "";
+let currentInputForDisplay = "";
 const display = document.getElementById("display");
 display.textContent = "DISPLAY";
 const numberButtons = document.querySelectorAll(".numberButton");
-console.log(numberButtons);
 numberButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    console.log(button.id);
-    currentInput += button.id;
-    display.textContent = currentInput;
+    currentInputForCalculation += button.id;
+    currentInputForDisplay = button.id;
+    displayValue.push(currentInputForDisplay);
+    display.textContent = displayValue.join("");
   });
+});
+let currentOperator = "";
+let result = 0;
+const operatorButtons = document.querySelectorAll(".operatorButton");
+operatorButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    currentOperator = button.textContent;
+    displayValue.push(currentOperator);
+    if (currentInputForCalculation !== "wrong") {
+      inputArray.push(+currentInputForCalculation);
+    }
+    inputArray.push(button.id);
+    console.log(inputArray);
+    currentInputForCalculation = "";
+    display.textContent = displayValue.join("");
+    // TODO After pressing operator button we should remember currentInput, clear it and start writing new input
+  });
+});
+const evaluateButton = document.querySelector("#evaluate");
+evaluateButton.addEventListener("click", () => {
+  inputArray.push(+currentInputForCalculation);
+  currentInputForCalculation = "wrong";
+
+  console.log(`before operate: ${inputArray}`);
+  result = operate(inputArray.shift(), inputArray.shift(), inputArray.shift());
+  inputArray[0] = result;
+  console.log(`after operate: ${inputArray}`);
+  displayValue = [result];
+  display.textContent = result;
+  console.log(displayValue);
 });
