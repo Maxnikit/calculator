@@ -64,6 +64,7 @@ const operate = function (firstNumber, operator, secondNumber) {
       break;
   }
 };
+let priorityOpIndex = 0;
 let calculateBuffer = [];
 let displayValue = [];
 let inputArray = [];
@@ -91,7 +92,6 @@ operatorButtons.forEach((button) => {
       inputArray.push(+currentInputForCalculation);
     }
     inputArray.push(button.id);
-    console.log(inputArray);
     currentInputForCalculation = "";
     display.textContent = displayValue.join("");
   });
@@ -101,12 +101,16 @@ evaluateButton.addEventListener("click", () => {
   inputArray.push(+currentInputForCalculation);
   currentInputForCalculation = "wrong";
   console.log(`Before while loop ${calculateBuffer}`);
-  console.log();
+  console.log(inputArray);
   while (
     inputArray.indexOf("multiply") !== -1 ||
     inputArray.indexOf("divide") !== -1
   ) {
-    let priorityOpIndex = inputArray.indexOf("multiply" || "divide");
+    if (inputArray.indexOf("multiply") !== -1) {
+      priorityOpIndex = inputArray.indexOf("multiply");
+    } else if (inputArray.indexOf("divide") !== -1) {
+      priorityOpIndex = inputArray.indexOf("divide");
+    }
     console.log(priorityOpIndex);
     calculateBuffer.push(
       inputArray[priorityOpIndex - 1],
@@ -122,19 +126,33 @@ evaluateButton.addEventListener("click", () => {
 
     console.log(`buffer is: ${calculateBuffer}`);
   }
-  console.log(`after while loop ${calculateBuffer}`);
-  console.log(`before operate: ${inputArray}`);
-  console.log(calculateBuffer);
-  result = operate(
-    calculateBuffer.shift(),
-    calculateBuffer.shift(),
-    calculateBuffer.shift()
-  );
-  inputArray[0] = result;
-  console.log(`after operate: ${inputArray}`);
+  while (
+    inputArray.indexOf("add") !== -1 ||
+    inputArray.indexOf("subtract") !== -1
+  ) {
+    if (inputArray.indexOf("add") !== -1) {
+      priorityOpIndex = inputArray.indexOf("add");
+    } else if (inputArray.indexOf("subtract") !== -1) {
+      priorityOpIndex = inputArray.indexOf("subtract");
+    }
+    console.log(priorityOpIndex);
+    calculateBuffer.push(
+      inputArray[priorityOpIndex - 1],
+      inputArray[priorityOpIndex],
+      inputArray[priorityOpIndex + 1]
+    );
+    result = operate(
+      calculateBuffer.shift(),
+      calculateBuffer.shift(),
+      calculateBuffer.shift()
+    );
+    inputArray.splice(priorityOpIndex - 1, 3, result);
+
+    console.log(`buffer is: ${calculateBuffer}`);
+  }
+  console.log(inputArray);
   displayValue = [result];
   display.textContent = result;
-  console.log(displayValue);
 });
 // TODO add Keybindings
 // const findPriorityOperator = function () {
