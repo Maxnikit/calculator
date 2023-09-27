@@ -14,28 +14,42 @@
   </head>
   <body>
     <div id="container">
-      <div id="title">Calculator</div>
-      <div id="display">Display(work in progress)</div>
-      <div id="numberContainer">
-        <button id="1" class="numberButton">1</button>
-        <button id="2" class="numberButton">2</button>
-        <button id="3" class="numberButton">3</button>
-        <button id="4" class="numberButton">4</button>
-        <button id="5" class="numberButton">5</button>
-        <button id="6" class="numberButton">6</button>
-        <button id="7" class="numberButton">7</button>
-        <button id="8" class="numberButton">8</button>
-        <button id="9" class="numberButton">9</button>
-        <button id="0" class="numberButton">0</button>
-        <!-- onClick="replyClick(this.id)" -->
+      <h1 id="title">Calculator</h1>
+      <div id="displayContainer">
+        <div id="display"><p>Display(work in progress)</p></div>
+        <button id="backspace">⌫</button>
       </div>
-      <div id="operatorContainer">
-        <button id="add" class="operatorButton">+</button>
-        <button id="subtract" class="operatorButton">-</button>
-        <button id="multiply" class="operatorButton">*</button>
-        <button id="divide" class="operatorButton">/</button>
-        <button id="evaluate">=</button>
-        <button id="clear">C</button>
+
+      <div id="buttonContainer">
+        <div id="firstRow" class="row">
+          <button id="clear">C</button>
+          <button id="7" class="numberButton">7</button>
+          <button id="4" class="numberButton">4</button>
+          <button id="1" class="numberButton">1</button>
+          <button id="0" class="numberButton">0</button>
+        </div>
+        <div id="secondRow" class="row">
+          <button id="pow" class="operatorButton">
+            <span>x<sup>y</sup></span>
+          </button>
+          <button id="8" class="numberButton">8</button>
+          <button id="5" class="numberButton">5</button>
+          <button id="2" class="numberButton">2</button>
+          <button id="." class="decimal">.</button>
+        </div>
+        <div id="thirdRow" class="row">
+          <button id="factorial" class="operatorButton">x!</button>
+          <button id="9" class="numberButton">9</button>
+          <button id="6" class="numberButton">6</button>
+          <button id="3" class="numberButton">3</button>
+        </div>
+        <div id="fourthRow" class="row">
+          <button id="divide" class="operatorButton">/</button>
+          <button id="multiply" class="operatorButton">*</button>
+          <button id="subtract" class="operatorButton">-</button>
+          <button id="add" class="operatorButton">+</button>
+          <button id="evaluate">=</button>
+        </div>
       </div>
     </div>
     <script src="script.js" async defer></script>

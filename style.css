@@ -2,4 +2,56 @@
   display: flex;
   flex-direction: column;
   border: 1px solid black;
+  margin: 0 auto;
+  background-color: grey;
+  padding: 5px;
+}
+html {
+  background-color: blueviolet;
+}
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+#title {
+  text-align: center;
+  font-size: 30px;
+}
+
+#buttonContainer {
+  display: flex;
+}
+.row {
+  display: flex;
+  flex-direction: column;
+}
+button {
+  width: 50px;
+  height: 50px;
+  font-size: 30px;
+  text-align: center;
+}
+#displayContainer {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+#display {
+  flex: auto;
+  text-align: end;
+  border: pink 1px dotted;
+  font-size: 30px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  background-color: darkcyan;
+}
+.operatorButton {
+  background-color: green;
+}
+.numberButton {
+  background-color: brown;
 }

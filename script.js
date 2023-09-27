@@ -54,14 +54,13 @@ const operate = function (firstNumber, operator, secondNumber) {
   switch (operator) {
     case "add":
       console.log("function add");
-      return add(firstNumber, secondNumber);
+      return +add(firstNumber, secondNumber).toFixed(5);
     case "subtract":
-      return subtract(firstNumber, secondNumber);
+      return +subtract(firstNumber, secondNumber).toFixed(5);
     case "multiply":
-      return multiply(firstNumber, secondNumber);
+      return +multiply(firstNumber, secondNumber).toFixed(5);
     case "divide":
-      return divide(firstNumber, secondNumber);
-      break;
+      return +divide(firstNumber, secondNumber).toFixed(5);
   }
 };
 let errorFlag = false;
@@ -78,14 +77,28 @@ display.textContent = "DISPLAY";
 const numberButtons = document.querySelectorAll(".numberButton");
 numberButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    currentInputForCalculation += button.id;
-
     currentInputForDisplay = button.id;
+    currentInputForCalculation += button.id;
     displayValue.push(currentInputForDisplay);
     result = displayValue.join("");
-
     display.textContent = displayValue.join("");
+
+    console.log(currentInputForCalculation);
   });
+});
+
+const decimalButton = document.querySelector(".decimal");
+decimalButton.addEventListener("click", () => {
+  if (
+    currentInputForCalculation.charAt(currentInputForCalculation.length - 1) !==
+    "."
+  ) {
+    currentInputForCalculation += decimalButton.id;
+    currentInputForDisplay = decimalButton.id;
+    displayValue.push(currentInputForDisplay);
+    result = displayValue.join("");
+    display.textContent = displayValue.join("");
+  }
 });
 
 const operatorButtons = document.querySelectorAll(".operatorButton");
@@ -93,9 +106,9 @@ operatorButtons.forEach((button) => {
   button.addEventListener("click", () => {
     currentOperator = button.textContent;
     displayValue.push(currentOperator);
-    if (currentInputForCalculation !== "wrong") {
-      inputArray.push(+currentInputForCalculation);
-    }
+    // if (currentInputForCalculation !== "wrong") {
+    inputArray.push(+currentInputForCalculation);
+    // }
     inputArray.push(button.id);
     currentInputForCalculation = "";
     display.textContent = displayValue.join("");
@@ -104,67 +117,70 @@ operatorButtons.forEach((button) => {
 //TODO Find out about currentInputForCalculation=wrong and why it causes NaN to appear after pressing = multiple times
 const evaluateButton = document.querySelector("#evaluate");
 evaluateButton.addEventListener("click", () => {
-  inputArray.push(+currentInputForCalculation);
-  currentInputForCalculation = "wrong";
-  while (
-    inputArray.indexOf("multiply") !== -1 ||
-    inputArray.indexOf("divide") !== -1
-  ) {
-    if (inputArray.indexOf("multiply") !== -1) {
-      priorityOpIndex = inputArray.indexOf("multiply");
-    } else if (inputArray.indexOf("divide") !== -1) {
-      priorityOpIndex = inputArray.indexOf("divide");
-      if (inputArray[priorityOpIndex + 1] === 0) {
-        errorFlag = true;
-        inputArray[priorityOpIndex + 1] = 1;
+  if (inputArray[inputArray.length - 1] != currentInputForCalculation) {
+    inputArray.push(+currentInputForCalculation);
+
+    // currentInputForCalculation = "wrong";
+    while (
+      inputArray.indexOf("multiply") !== -1 ||
+      inputArray.indexOf("divide") !== -1
+    ) {
+      if (inputArray.indexOf("multiply") !== -1) {
+        priorityOpIndex = inputArray.indexOf("multiply");
+      } else if (inputArray.indexOf("divide") !== -1) {
+        priorityOpIndex = inputArray.indexOf("divide");
+        if (inputArray[priorityOpIndex + 1] === 0) {
+          errorFlag = true;
+          inputArray[priorityOpIndex + 1] = 1;
+        }
       }
-    }
-    console.log(priorityOpIndex);
-    calculateBuffer.push(
-      inputArray[priorityOpIndex - 1],
-      inputArray[priorityOpIndex],
-      inputArray[priorityOpIndex + 1]
-    );
-    result = operate(
-      calculateBuffer.shift(),
-      calculateBuffer.shift(),
-      calculateBuffer.shift()
-    );
-    inputArray.splice(priorityOpIndex - 1, 3, result);
+      console.log(priorityOpIndex);
+      calculateBuffer.push(
+        inputArray[priorityOpIndex - 1],
+        inputArray[priorityOpIndex],
+        inputArray[priorityOpIndex + 1]
+      );
+      result = operate(
+        calculateBuffer.shift(),
+        calculateBuffer.shift(),
+        calculateBuffer.shift()
+      );
+      inputArray.splice(priorityOpIndex - 1, 3, result);
 
-    console.log(`buffer is: ${calculateBuffer}`);
-  }
-  while (
-    inputArray.indexOf("add") !== -1 ||
-    inputArray.indexOf("subtract") !== -1
-  ) {
-    if (inputArray.indexOf("add") !== -1) {
-      priorityOpIndex = inputArray.indexOf("add");
-    } else if (inputArray.indexOf("subtract") !== -1) {
-      priorityOpIndex = inputArray.indexOf("subtract");
+      console.log(`buffer is: ${calculateBuffer}`);
     }
-    console.log(priorityOpIndex);
-    calculateBuffer.push(
-      inputArray[priorityOpIndex - 1],
-      inputArray[priorityOpIndex],
-      inputArray[priorityOpIndex + 1]
-    );
-    result = operate(
-      calculateBuffer.shift(),
-      calculateBuffer.shift(),
-      calculateBuffer.shift()
-    );
-    inputArray.splice(priorityOpIndex - 1, 3, result);
+    while (
+      inputArray.indexOf("add") !== -1 ||
+      inputArray.indexOf("subtract") !== -1
+    ) {
+      if (inputArray.indexOf("add") !== -1) {
+        priorityOpIndex = inputArray.indexOf("add");
+      } else if (inputArray.indexOf("subtract") !== -1) {
+        priorityOpIndex = inputArray.indexOf("subtract");
+      }
+      console.log(priorityOpIndex);
+      calculateBuffer.push(
+        inputArray[priorityOpIndex - 1],
+        inputArray[priorityOpIndex],
+        inputArray[priorityOpIndex + 1]
+      );
+      result = operate(
+        calculateBuffer.shift(),
+        calculateBuffer.shift(),
+        calculateBuffer.shift()
+      );
+      inputArray.splice(priorityOpIndex - 1, 3, result);
 
-    console.log(`buffer is: ${calculateBuffer}`);
-  }
-  console.log(inputArray);
-  displayValue = [result];
-  if (!errorFlag) {
-    display.textContent = result;
-  } else if (errorFlag) {
-    display.textContent = "Trying to divide by 0, huh?";
-    errorFlag = false;
+      console.log(`buffer is: ${calculateBuffer}`);
+    }
+    console.log(inputArray);
+    displayValue = [result];
+    if (!errorFlag) {
+      display.textContent = result;
+    } else if (errorFlag) {
+      display.textContent = "Trying to divide by 0, huh?";
+      errorFlag = false;
+    }
   }
 });
 // TODO add Keybindings
@@ -182,3 +198,5 @@ clearButton.addEventListener("click", () => {
   display.textContent = "DISPLAY";
 });
 //TODO Disable ability to write several zeros in a row
+//TODO Disable ability to write several operators in a row
+//TODO Add Backspace and dot button
