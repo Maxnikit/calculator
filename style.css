@@ -16,7 +16,13 @@
   border-radius: 20px;
 }
 html {
-  background-color: #9b99a0;
+  background-image: linear-gradient(
+    90deg,
+    #402876,
+    #51368d 33%,
+    #7353ba 66%,
+    #faa6ff 100%
+  );
 }
 body {
   font-family: "Roboto", sans-serif;
